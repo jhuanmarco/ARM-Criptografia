@@ -208,11 +208,11 @@
 
 		descriptografia:		
 			@ MSG DO MENU DE DESCRIPTOGRAFIA
-			mov	r0, #1					@ 1 PARA WRITE, 0 PARA READ
-			ldr     r1, =msg_menu_desc			@ R1 CONTEM ENDEREÇO DA MENSAGEM
-			ldr     r2, =len_menu_desc			@ R2 CONTEM TAMANHO DA MENSAGEM
-			mov     r7, #4      				@ 4 PARA WRITE, 3 PARA READ
-			svc     0x055   				@ FUNCAO PARA WRITE, R0 E R7 COFIGURAÇÃO DO SIMULADOR, R1 CONTEM BUFFER DE MSG E R2 O TAMANHO
+			mov	r0, #1				@ 1 PARA WRITE, 0 PARA READ
+			ldr     r1, =msg_menu_desc		@ R1 CONTEM ENDEREÇO DA MENSAGEM
+			ldr     r2, =len_menu_desc		@ R2 CONTEM TAMANHO DA MENSAGEM
+			mov     r7, #4      			@ 4 PARA WRITE, 3 PARA READ
+			svc     0x055   			@ FUNCAO PARA WRITE, R0 E R7 COFIGURAÇÃO DO SIMULADOR, R1 CONTEM BUFFER DE MSG E R2 O TAMANHO
 		
 		le_asterisco_desc:
 			ldr	r3, =KBD_STATUS			@ R3 CONTEM ENDEREÇO DE STATUS DO TECLADO
