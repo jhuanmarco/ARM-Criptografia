@@ -16,52 +16,53 @@
 		mensagem: .skip MSG_TAMANHO		@ ALOCA MSG_TAMANHO BYTES NA MEMORIA PARA A MSG
 	
 @----------- MENSAGENS
+		@ MENSAGENS QUE APARECEM NA JANELA AO RODAR O CÓDIGO, LEN SO OS TAMANHOS DAS MENSAGENS (NECESSARIO PARA PRINTAR DE ACORDO COM A FUNCAO DO SISTEMA)
 
-		msg_inicial:				@ MENSAGEM INICIAL DO PROGRAMA
+		msg_inicial:				
 			.ascii "----------------------------------------\n -- CRIPTOGRAFIA DE MENSAGEM ARMSIM --\n----------------------------------------\n * - PARA DIGITAR A CHAVE DE CRIPTOGRAFIA\n # - PARA SAIR\n\n"
 		
-		len_inicial = . - msg_inicial		@ TAMANHO DA MENSAGEM PRINCIPAL (NECESSARIO PARA PRINTAR)
+		len_inicial = . - msg_inicial		
 		
-		msg_inserir_chave:			@ MENSAGEM DE INSERÇÃO DA CHAVE
+		msg_inserir_chave:			
 			.ascii " DIGITE A CHAVE DE CRIPTOFRAFIA (MIN 10 E MAX 20 DIGITOS)\n '#' PARA TERMINAR A INSERCAO\n\n CHAVE = "
 			
-		len_inserir_chave = . - msg_inserir_chave 	@ TAMANHO DA MENSAGEM DE INSERÇÃO
+		len_inserir_chave = . - msg_inserir_chave 	
 		
-		escreve_asterisco:			@ INSERCAO DE ASTERISCO AO PRESSIONAR A CHAVE
+		escreve_asterisco:			
 			.ascii "*"
 		
-		msg_inserir_msg:			@ MENSAGEM PARA INSERIR A MENSAGEM
+		msg_inserir_msg:			
 			.ascii "\n\n INSIRA A MENSAGEM A SER CRIPTOGRAFADA\n\n"
 			
-		len_inserir_msg= . - msg_inserir_msg	@ TAMANHO DA MENSAGEM DE INSERÇÃO
+		len_inserir_msg= . - msg_inserir_msg	
 		
-		msg_cripto:				@ MENSAGEM CRIPTOGRAFIA
+		msg_cripto:				
 			.ascii " MENSAGEM CRIPTOGRAFADA: " 
 			
-		len_cripto = . - msg_cripto 		@ TAMANHO DA MENSAGEM DE DESCRIPTOGRAFIA
+		len_cripto = . - msg_cripto 		
 		
 		msg_menu_desc:
 			.ascii "\n\n----------------------------------------\n -- DESCRIPTOGRAFIA DE MENSAGEM ARMSIM -- \n----------------------------------------\n * - PARA DIGITAR A CHAVE DE DESCRIPTOGRAFIA\n # - PARA SAIR\n\n"			 
 		
-		len_menu_desc= . - msg_menu_desc @ TAMANHO DA MENSAGEM DE MENU DA DESCRIPTOGRAFIA
+		len_menu_desc= . - msg_menu_desc
 		
-		msg_desc:				@ MENSAGEM PARA A DESCRIPTOGRAFIA
+		msg_desc:				
 			.ascii " DIGITE A CHAVE DE DESCRIPTOFRAFIA\n '#' PARA TERMINAR A INSERCAO\n\n CHAVE =  "
 			
-		len_msg_desc = . - msg_desc     	@ TAMANHO DA MENSAGEM PARA A DESCRIPTOGRAFIA
+		len_msg_desc = . - msg_desc     	
 		
-		msg_descriptografada:			@ MENSAGEM APOS DESCRIPTOGRAFAS
+		msg_descriptografada:			
 			.ascii "\n\n MENSAGEM DESCRIPTOGRAFADA: "
 			
-		len_descriptografada = . - msg_descriptografada		@ TAMANHO DA MENSAGEM APOS DESCRIPTOGRAFAR
+		len_descriptografada = . - msg_descriptografada		
 		
-		msg_fim:						@ MENSAGEM AO FINAL DA EXECUÇÃO
+		msg_fim:						
 			.ascii "\n\n -- EXECUCAO FINALIZADA --\n\n\n"
 			
-		len_msg_fim = . - msg_fim 		@ TAMANHO DA MENSAGEM FINAL
+		len_msg_fim = . - msg_fim 		
 				
 @----------- FUNCOES
-							@ NÃO FUNCIONAL (CALL E RET NAO RECONHECIDOS AO COMPILAR)
+							@ NÃO FUNCIONAL (CALL E RET NAO RECONHECIDOS PELO MONTADOR)
 	
 @----------- INICIO
 	
