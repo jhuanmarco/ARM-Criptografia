@@ -8,6 +8,7 @@
 @ 4º PERÍODO, CIÊNCIAS DA COMPUTAÇÃO
  
 @----------- MAPA DISPLAY KEYBOARD -----------
+
 		.set KBD_DATA,   0x90010		@ ENDEREÇO DE DADOS DO KEYBOARD
 		.set KBD_STATUS, 0x90011		@ ENDEREÇO DE STATUS DO KEYBOARD
 		
@@ -20,7 +21,7 @@
 @----------- VARIAVEIS -----------
 		
 		chave: .skip CHAVE_TAMANHO		@ ALOCA CHAVE_TAMANHO BYTES NA MEMORIA PARA A CHAVE
-		mensagem_desc: .skip MSG_TAMANHO		@ ALOCA CHAVE_TAMANHO BYTES NA MEMORIA PARA A MSG DESCRIPTOGRAFADA
+		mensagem_desc: .skip MSG_TAMANHO	@ ALOCA CHAVE_TAMANHO BYTES NA MEMORIA PARA A MSG DESCRIPTOGRAFADA
 		mensagem: .skip MSG_TAMANHO		@ ALOCA MSG_TAMANHO BYTES NA MEMORIA PARA A MSG
 	
 @----------- MENSAGENS -----------
@@ -68,19 +69,17 @@
 			.ascii "\n\n -- EXECUCAO FINALIZADA --\n\n\n"
 			
 		len_msg_fim = . - msg_fim 		
-				
-@----------- FUNCOES -----------
-							@ NÃO FUNCIONAL (CALL E RET NAO RECONHECIDOS PELO MONTADOR)
-	
+					
 @----------- INICIO -----------
 	
-		inicio:
-			@ ESCREVE A MENSAGEM INICIAL DO PROGRAMA
-			mov	r0, #1				@ 1 PARA WRITE, 0 PARA READ
-			ldr     r1, =msg_inicial   		@ R1 CONTEM ENDEREÇO DA MENSAGEM
-			ldr     r2, =len_inicial 		@ R2 CONTEM TAMANHO DA MENSAGEM
-			mov     r7, #4      			@ 4 PARA WRITE, 3 PARA READ
-			svc     0x055   			@ FUNCAO PARA WRITE, R0 E R7 COFIGURAÇÃO DO SIMULADOR, R1 CONTEM BUFFER DE MSG E R2 O TAMANHO
+	inicio:
+		
+		@ ESCREVE A MENSAGEM INICIAL DO PROGRAMA
+		mov	r0, #1				@ 1 PARA WRITE, 0 PARA READ
+		ldr     r1, =msg_inicial   		@ R1 CONTEM ENDEREÇO DA MENSAGEM
+		ldr     r2, =len_inicial 		@ R2 CONTEM TAMANHO DA MENSAGEM
+		mov     r7, #4      			@ 4 PARA WRITE, 3 PARA READ
+		svc     0x055   			@ FUNCAO PARA WRITE, R0 E R7 COFIGURAÇÃO DO SIMULADOR, R1 CONTEM BUFFER DE MSG E R2 O TAMANHO
 				
 @----------- MENU INICIAL -----------
 
@@ -102,6 +101,7 @@
 @----------- RECEBE CHAVE INICIAL -----------
 			
 		bloco_chave:
+		
 			@ MSG PARA INSERIR A CHAVE
 			mov	r0, #1				@ 1 PARA WRITE, 0 PARA READ
 			ldr     r1, =msg_inserir_chave	 	@ R1 CONTEM ENDEREÇO DA MENSAGEM
@@ -146,6 +146,7 @@
 @----------- RECEBE A MENSAGEM -----------
 
 		bloco_mensagem:
+		
 			@ MSG PARA INSERIR A MENSAGEM
 			mov	r0, #1				@ 1 PARA WRITE, 0 PARA READ
 			ldr     r1, =msg_inserir_msg	 	@ R1 CONTEM ENDEREÇO DA MENSAGEM
@@ -178,6 +179,7 @@
 			ldrb	r10, [r8, r6]			@ R10 POSSUI O BYTE ATUAL DA MSG
 			
 			add	r10, r10, r9			@ R10 É ATUALIZADO R10 = R10 + CHAVE
+			sub	r10, r10, r3			@ R10 É ATUALIZADO COM R10 = R10 - TAMANHO DA CHAVE
 			strb	r10, [r8, r6]			@ O BYTE ATUAL DA MENSAGEM É ATUALIZADO COM R10
 			
 			add     r6, r6, #1			@ PERCORRE A MENSAGEM
@@ -207,12 +209,13 @@
 @----------- MENU DESCRIPTOGRAFIA -----------
 
 		descriptografia:		
-			@ MSG DO MENU DE DESCRIPTOGRAFIA
-			mov	r0, #1				@ 1 PARA WRITE, 0 PARA READ
-			ldr     r1, =msg_menu_desc		@ R1 CONTEM ENDEREÇO DA MENSAGEM
-			ldr     r2, =len_menu_desc		@ R2 CONTEM TAMANHO DA MENSAGEM
-			mov     r7, #4      			@ 4 PARA WRITE, 3 PARA READ
-			svc     0x055   			@ FUNCAO PARA WRITE, R0 E R7 COFIGURAÇÃO DO SIMULADOR, R1 CONTEM BUFFER DE MSG E R2 O TAMANHO
+		
+		@ MSG DO MENU DE DESCRIPTOGRAFIA
+		mov	r0, #1					@ 1 PARA WRITE, 0 PARA READ
+		ldr     r1, =msg_menu_desc			@ R1 CONTEM ENDEREÇO DA MENSAGEM
+		ldr     r2, =len_menu_desc			@ R2 CONTEM TAMANHO DA MENSAGEM
+		mov     r7, #4      				@ 4 PARA WRITE, 3 PARA READ
+		svc     0x055   				@ FUNCAO PARA WRITE, R0 E R7 COFIGURAÇÃO DO SIMULADOR, R1 CONTEM BUFFER DE MSG E R2 O TAMANHO
 		
 		le_asterisco_desc:
 			ldr	r3, =KBD_STATUS			@ R3 CONTEM ENDEREÇO DE STATUS DO TECLADO
@@ -286,12 +289,13 @@
 			mov	r6, #0				@ COUNT PARA ANDAR NA MENSAGEM
 			ldr 	r7, =chave			@ R7 APONTA PARA INICIO DA CHAVE
 			ldr	r8, =mensagem			@ R8 APONTA PARA INICIO DA MENSAGEM
-			ldr r9, =mensagem_desc			@ R9 APONTA PARA INICIO DA MENSAGEM DESCRIPTOGRAFADA
+			ldr 	r9, =mensagem_desc			@ R9 APONTA PARA INICIO DA MENSAGEM DESCRIPTOGRAFADA
 			
 		descriptografar:
 			ldrb 	r1, [r7, r5]			@ R1 RECEBE BYTE DA POSICAO R7 + R6 DA CHAVE DE DESCPRITOGRAFIA 
 			ldrb 	r2, [r8, r6]			@ R2 RECEBE BYTE DA POSICAO R8 + R6 DE MENSAGEM
 			sub	r2, r2, r1			@ R2 = R2 - R1 (INVERSO DA CRIPTOGRAFIA)
+			add 	r2, r2, r3			@ R3 = R3 + TAMANHO DA CHAVE
 			strb	r2, [r9, r6]			@ ARMAZENA NA MENSAGEM O RESULTADO DA SUBTRACAO
 			
 			add	r5, r5, #1			@ PERCORRE CHAVE
@@ -312,7 +316,7 @@
 			svc     0x055   			@ FUNCAO PARA WRITE, R0 E R7 COFIGURAÇÃO DO SIMULADOR, R1 CONTEM BUFFER DE MSG E R2 OTAMANHO
 		
 			mov	r0, #1				@ 1 PARA WRITE, 0 PARA READ
-			ldr     r1, =mensagem_desc			@ R1 CONTEM ENDEREÇO DA MENSAGEM
+			ldr     r1, =mensagem_desc		@ R1 CONTEM ENDEREÇO DA MENSAGEM
 			mov     r2, r12				@ R2 CONTEM TAMANHO DA MENSAGEM
 			mov     r7, #4      			@ 4 PARA WRITE, 3 PARA READ
 			svc     0x055   			@ FUNCAO PARA WRITE, R0 E R7 COFIGURAÇÃO DO SIMULADOR, R1 CONTEM BUFFER DE MSG E R2 O TAMANHO
@@ -323,8 +327,8 @@
 
 		fim:
 			@ MSG FINAL DE EXECUÇÃO
-			mov	r0, #1				@ 1 PARA WRITE, 0 PARA READ
-			ldr     r1, =msg_fim  	 		@ R1 CONTEM ENDEREÇO DA MENSAGEM
-			ldr     r2, =len_msg_fim 		@ R2 CONTEM TAMANHO DA MENSAGEM
-			mov     r7, #4      			@ 4 PARA WRITE, 3 PARA READ
-			svc     0x055   			@ FUNCAO PARA WRITE, R0 E R7 COFIGURAÇÃO DO SIMULADOR, R1 CONTEM BUFFER DE MSG E R2 O TAMANHO
+			mov	r0, #1			@ 1 PARA WRITE, 0 PARA READ
+			ldr     r1, =msg_fim  	 	@ R1 CONTEM ENDEREÇO DA MENSAGEM
+			ldr     r2, =len_msg_fim 	@ R2 CONTEM TAMANHO DA MENSAGEM
+			mov     r7, #4      		@ 4 PARA WRITE, 3 PARA READ
+			svc     0x055   		@ FUNCAO PARA WRITE, R0 E R7 COFIGURAÇÃO DO SIMULADOR, R1 CONTEM BUFFER DE MSG E R2 O TAMANHO
